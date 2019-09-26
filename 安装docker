@@ -1,0 +1,102 @@
+第二章 容器基础用法与安装
+
+docker分为了社区版（ce）与商用版（ee），而对于普通的学习者来说，ce版即可满足要求，商业版相较于社区版商业版多了容器资源监控和镜像扫描的功能，一般来说普通用户也用不到。
+
+一、安装硬件环境
+内核版本：Linux oracle 3.10.0-957.27.2.el7.x86_64
+系统版本：centos 7.2 64位
+说明：
+一般建议使用内核3.8以上的版本，系统版本使用centos7以上，并不是说centos6无法安装，而是功能更加完善，比如容器用到的namespace，在3.8以后就会更加的完善。
+
+
+二、安装步骤
+   参考链接
+https://yeasy.gitbooks.io/docker_practice/install/centos.html
+
+   2.1  安装前准备
+      2.1.1 卸载原有的docker依赖关系	
+       注：/var/lib/docker/目录下的镜像文件，容器，卷和网络将会被保留，不会被删除
+       命令：
+sudo yum remove docker \
+docker-client \
+docker-client-latest \
+docker-common \
+docker-latest \
+docker-latest-logrotate \
+docker-logrotate \
+docker-selinux \
+docker-engine-selinux \
+docker-engine
+插个链接：
+关于yum的一些概念可以参考链接
+https://www.iteye.com/blog/fantaxy025025-2414931
+2.1.2 安装依赖包&添加yum源
+  安装依赖包
+  $ sudo yum install -y yum-utils \
+           device-mapper-persistent-data \
+           lvm2
+   添加yum源
+  $ sudo yum-config-manager \
+    --add-repo \
+    https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo
+
+
+# 官方源
+# $ sudo yum-config-manager \
+#     --add-repo \
+#     https://download.docker.com/linux/centos/docker-ce.repo
+
+说明：鉴于国内网络问题，强烈建议使用国内源，官方源请在注释中查看
+下载完成后，可以看一下repo中的地址
+这里面是从http://download.docker.com中下载的，可以看一下延迟，如果较大的话可以更换一下地址，我这里ping还好，就不更换了
+
+
+
+2.1.3 启动每日构建
+yum-config-manager --enable docker-ce-nightly
+暂时不知道啥意思
+
+2.1.4 更新yum&安装docker-ce   
+更新 yum 软件源缓存，并安装 docker-ce。
+$ sudo yum makecache fast
+$ sudo yum install docker-ce
+
+--脚本安装--
+//建议手动安装yum -y install docker-ce
+在测试或开发环境中 Docker 官方为了简化安装流程，提供了一套便捷的安装脚本，CentOS 系统上可以使用这套脚本安装：
+$ curl -fsSL get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh --mirror Aliyun
+执行这个命令后，脚本就会自动的将一切准备工作做好，并且把 Docker CE 的 Edge 版本安装在系统中。
+
+ 启动 Docker CE
+$ sudo systemctl enable docker
+$ sudo systemctl start docker
+
+然后就失败了！
+
+
+
+报错解决汇总篇
+https://www.jianshu.com/p/93518610eea1
+按照上面所说解决问题后重启即可
+
+
+
+
+
+docker架构：
+
+
+
+
+镜像加速器
+直接dockerhub中拉，好像也挺快的
+
+
+
+镜像加速即在/etc/docker/daemon.json文件中输入仓库地址方便拉取
+没有这个文件的可以自己创建
+
+
+
+ 
